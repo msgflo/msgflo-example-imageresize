@@ -1,5 +1,7 @@
 # MsgFlo example: Image resizing service
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/msgflo/msgflo-example-imageresize.svg)](https://greenkeeper.io/)
+
 Example of how to build a backend service for CPU-intensive tasks using [Msgflo](https://msgflo/org).
 
 ## API
