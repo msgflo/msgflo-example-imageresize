@@ -33,7 +33,7 @@ successTest = (endpoint, name, urls) ->
         response = r
 
     it 'should respond with 202 Accepted', ->
-      chai.expect(response.statusCode).to.equal 202
+      chai.expect(response.statusCode, JSON.stringify(response.body)).to.equal 202
 
 describe 'Resizing images via HTTP API', ->
 
