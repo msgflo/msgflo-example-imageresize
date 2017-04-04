@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/msgflo/msgflo-example-imageresize.svg?branch=master)](https://travis-ci.org/msgflo/msgflo-example-imageresize)
 # MsgFlo example: Image resizing service
 
 Example of how to build a backend service for CPU-intensive tasks using [Msgflo](https://msgflo/org).
