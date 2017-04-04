@@ -4,7 +4,8 @@
   "description": "Image resizing service built with MsgFlo",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha  --reporter spec --compilers .coffee:coffee-script/register tests/*.coffee",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
