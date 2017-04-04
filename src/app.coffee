@@ -2,10 +2,33 @@ express = require 'express'
 bluebird = require 'bluebird'
 bodyParser = require 'body-parser'
 uuid = require 'uuid'
+msgfloNodejs = require 'msgflo-nodejs'
 debug = require('debug')('msgflo-imageresize:web')
 
 config = require '../config'
 errors = require './errors'
+
+WebParticipant = (client, role) ->
+  id = process.env.DYNO or uuid.v4()
+  id = "#{role}-#{id}"
+
+  definition =
+    id: id
+    component: 'imageresize/HttpApi'
+    icon: 'code'
+    label: 'Creates processing jobs from HTTP requests'
+    inports: [
+      { id: 'resizeimage', hidden: true } # for proxying data from .send() to outports through func()
+    ]
+    outports: [
+      { id: 'resizeimage' }
+    ]
+
+  func = (inport, indata, send) ->
+    # forward
+    return send inport, null, indata
+
+  return new msgfloNodejs.participant.Participant client, definition, func, role
 
 routes = {}
 routes.getJob = (req, res, next, jobId) ->
@@ -16,18 +39,35 @@ routes.resizeImages = (req, res, next) ->
   throw new error.HttpError "Missing .images array", 422 if not req.body.images
 
   jobId = uuid.v4()
+
+  # Generate one AMQP message for each image,
+  # so they can be processed independently by the worker
+  images = req.body.images.map (i) ->
+    i.id = uuid.v4()
+  messages = images.map (m) ->
+    m.job = jobId
+  for message in messages
+    req.participants.web.send 'resizeimage', message
+
+  # Store images with ID on as part of job,
+  # so we can correlate with id from worker
   job =
     id: jobId
-    payload: req.body
-
-  # FIXME: send the job payload out
+    images: images
   # FIXME: persist job info to database
 
   return res.location("/job/#{jobId}").status(202).end()
 
 setupApp = (app) ->
+  app.participants =
+    web: WebParticipant config.msgflo.broker, 'api'
+
   app.use bodyParser.json
     limit: '1mb'
+
+  app.use (req, res, next) ->
+    req.participants = app.participants
+    return next()
 
   # API routes
   app.post '/resize/', routes.resizeImages
@@ -53,17 +93,27 @@ setupApp = (app) ->
 
   return app
 
-startWeb = (port) ->
+startParticipant = (p) ->
+  return bluebird.promisify(p.start, context: p)()
+
+startWeb = (app, port) ->
   # Expose extra Bluebird methods
   bluebird.resolve().then () ->
     # wrapped for Exception safety
-    app = express()
-    app = setupApp app
     return new Promise (resolve, reject) ->
       app.server = app.listen port, (err) ->
+        console.log 'listening', port
         return reject err if err
         return resolve app
 
 exports.startServer = (port) ->
-  return startWeb port
+  app = express()
+  bluebird.resolve().then () ->
+    return setupApp app
+  .then () ->
+    return bluebird.all([
+      startWeb app, port
+      startParticipant app.participants.web
+    ]).then (array) ->
+      return Promise.resolve app
 
