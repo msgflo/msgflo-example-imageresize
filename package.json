@@ -23,5 +23,14 @@
   "bugs": {
     "url": "https://github.com/msgflo/msgflo-example-imageresize/issues"
   },
-  "homepage": "https://github.com/msgflo/msgflo-example-imageresize#readme"
+  "homepage": "https://github.com/msgflo/msgflo-example-imageresize#readme",
+  "dependencies": {
+    "amqplib": "^0.5.1",
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.1",
+    "coffee-script": "^1.12.4",
+    "express": "^4.15.2",
+    "msgflo": "^0.10.7",
+    "msgflo-nodejs": "^0.10.1"
+  }
 }
