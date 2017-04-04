@@ -1,0 +1,15 @@
+language: node_js
+dist: trusty
+sudo: false
+node_js:
+- '6'
+services:
+- rabbitmq
+- postgres
+addons:
+  postgresql: "9.6"
+env:
+  matrix:
+  - DATABASE_URL=postgres://postgres:@localhost/imageresize_test
+before_script:
+- psql -c 'create database imageresize_test;' -U postgres
