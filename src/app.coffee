@@ -1,6 +1,7 @@
 express = require 'express'
 bluebird = require 'bluebird'
 bodyParser = require 'body-parser'
+uuid = require 'uuid'
 debug = require('debug')('msgflo-imageresize:web')
 
 config = require '../config'
@@ -11,7 +12,18 @@ routes.getJob = (req, res, next, jobId) ->
   return next()
 
 routes.resizeImages = (req, res, next) ->
-  return next()
+  # TODO: verify request payload with a JSON schema
+  throw new error.HttpError "Missing .images array", 422 if not req.body.images
+
+  jobId = uuid.v4()
+  job =
+    id: jobId
+    payload: req.body
+
+  # FIXME: send the job payload out
+  # FIXME: persist job info to database
+
+  return res.location("/job/#{jobId}").status(202).end()
 
 setupApp = (app) ->
   app.use bodyParser.json

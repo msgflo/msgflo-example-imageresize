@@ -35,7 +35,8 @@
     "msgflo": "^0.10.7",
     "msgflo-nodejs": "^0.10.1",
     "request": "^2.81.0",
-    "request-promise": "^4.2.0"
+    "request-promise": "^4.2.0",
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
