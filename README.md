@@ -14,9 +14,13 @@ Ref. https://benramsey.com/blog/2008/04/http-status-201-created-vs-202-accepted/
 
 ## TODO
 
+Minimal
+
 * Worker can download/rescale
 * Worker can upload to a blob store
-* Database keeps job status
-* Tests: Rescale N images. Need example URLs
+* Database keeps job status, allows querying
+
+Bonus
+
 * UI: Accept URLs
 * Heroku Button support
