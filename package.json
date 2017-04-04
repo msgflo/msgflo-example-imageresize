@@ -28,9 +28,16 @@
     "amqplib": "^0.5.1",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.1",
+    "cheerio": "^0.22.0",
     "coffee-script": "^1.12.4",
     "express": "^4.15.2",
     "msgflo": "^0.10.7",
-    "msgflo-nodejs": "^0.10.1"
+    "msgflo-nodejs": "^0.10.1",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
   }
 }
