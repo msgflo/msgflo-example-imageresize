@@ -45,7 +45,7 @@ StoreResult = (client, role) ->
         console.error 'store error', indata.id, err
         return callback 'error', err, out if err
 
-      debug 'stored', indata.id, r
+      debug 'stored', indata.id, r.result?.output, r.error?.message
       return callback 'out', null, out
 
   p = new msgfloNodejs.participant.Participant client, definition, processFunc, role

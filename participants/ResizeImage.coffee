@@ -37,7 +37,7 @@ ResizeImage = (client, role) ->
         out.failed_at = new Date()
         return callback 'error', err, out if err
 
-      debug 'succeeded', indata.id, resizedUrl
+      debug 'succeeded', indata.payload.id, resizedUrl
       out.completed_at = new Date()
       out.result =
         output: resizedUrl
