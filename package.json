@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "Image resizing service built with MsgFlo",
   "main": "index.js",
+  "engines" : {
+    "node" : ">=7.x"
+  },
   "scripts": {
     "test": "mocha  --reporter spec --compilers .coffee:coffee-script/register tests/*.coffee",
     "start": "msgflo --forward stdout,stderr --graph graphs/imageresize.fbp",
