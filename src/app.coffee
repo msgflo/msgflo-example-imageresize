@@ -39,13 +39,22 @@ routes.resizeImages = (req, res, next) ->
   throw new error.HttpError "Missing .images array", 422 if not req.body.images
 
   jobId = uuid.v4()
+  created = new Date
 
   # Generate one AMQP message for each image,
   # so they can be processed independently by the worker
   images = req.body.images.map (i) ->
     i.id = uuid.v4()
-  messages = images.map (m) ->
-    m.job = jobId
+  messages = images.map (i) ->
+    m =
+      job: jobId
+      payload: i
+      created_at: created
+      started_at: null
+      completed_at: null
+      failed_at: null
+      error: null
+    return m
   for message in messages
     req.participants.web.send 'resizeimage', message
 
