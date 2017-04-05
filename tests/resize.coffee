@@ -119,7 +119,9 @@ killProcesses = (parts, signal) ->
 
 describe 'Resizing images via HTTP API', ->
   port = 6666
-  endpoint = "http://localhost:#{port}/resize"
+  baseurl = process.env.IMAGERESIZE_TEST_TARGET or "http://localhost:#{port}"
+  doSetup = not process.env.IMAGERESIZE_TEST_TARGET?
+  endpoint = "#{baseurl}/resize"
   processes = null
 
   # TODO: support specifying envvars like PORT
@@ -130,6 +132,7 @@ describe 'Resizing images via HTTP API', ->
 
   before ->
     @timeout 10*1000
+    return Promise.resolve true if not doSetup
     return setupParticipants setup
     .then (p) ->
       processes = p
