@@ -1,0 +1,5 @@
+
+api(imageresize/HttpApi) RESIZEIMAGE -> resize(imageresize/ResizeImage)
+
+resize OUT -> IN store(imageresize/StoreResult)
+resize ERROR -> IN store

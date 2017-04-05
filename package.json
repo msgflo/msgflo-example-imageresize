@@ -5,7 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha  --reporter spec --compilers .coffee:coffee-script/register tests/*.coffee",
-    "start": "node index.js"
+    "start": "msgflo --graph graphs/imageresize.fbp"
+  },
+  "msgflo": {
+    "namespace": "imageresize",
+    "components": {
+      "imageresize/HttpApi": "node index.js"
+    }
   },
   "repository": {
     "type": "git",
