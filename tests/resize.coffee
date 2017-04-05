@@ -52,7 +52,20 @@ successTest = (endpoint, name, urls) ->
           jobResponse = res
       it 'should return 201 Created', ->
         chai.expect(jobResponse.statusCode, JSON.stringify(jobResponse.body)).to.equal 201
-      it 'should show job as not completed'
+      it 'shows job as not completed', ->
+        job = jobResponse.body
+        chai.expect(job).to.include.keys ['created_at', 'updated_at', 'completed_at', 'failed_at']
+        chai.expect(job.completed_at).to.be.a 'null'
+        chai.expect(job.failed_at).to.be.a 'null'
+        chai.expect(job.created_at).to.be.a 'string'
+      it 'has info about the images', ->
+        job = jobResponse.body
+        chai.expect(job).to.include.keys ['id', 'data']
+        chai.expect(job.data).to.have.keys ['images']
+        images = job.data.images
+        chai.expect(images).to.exist
+        chai.expect(images).to.be.an 'object'
+        chai.expect(Object.keys(images)).to.have.length urls.length
 
     describe 'after a little time', ->
       it 'the job is completed'
