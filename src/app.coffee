@@ -3,7 +3,7 @@ bluebird = require 'bluebird'
 bodyParser = require 'body-parser'
 uuid = require 'uuid'
 msgfloNodejs = require 'msgflo-nodejs'
-debug = require('debug')('msgflo-imageresize:web')
+debug = require('debug')('imageresize:web')
 
 config = require '../config'
 errors = require './errors'
@@ -27,6 +27,7 @@ WebParticipant = (client, role) ->
 
   func = (inport, indata, send) ->
     # forward
+    debug 'sending', inport, indata.job, indata.payload.id
     return send inport, null, indata
 
   return new msgfloNodejs.participant.Participant client, definition, func, role
@@ -34,7 +35,7 @@ WebParticipant = (client, role) ->
 routes = {}
 routes.getJob = (req, res, next) ->
   jobId = req.params.id
-  console.log 'GET', jobId
+  debug "GET /job/:#{jobId}"
   jobs.get jobId
   .then (jobData) ->
     code = 201 # TODO: indicate completeness
@@ -43,6 +44,8 @@ routes.getJob = (req, res, next) ->
     return next err
 
 routes.resizeImages = (req, res, next) ->
+  debug "POST /resize", req.body?.images?.length
+
   # TODO: verify request payload with a JSON schema
   throw new error.HttpError "Missing .images array", 422 if not req.body.images
 
