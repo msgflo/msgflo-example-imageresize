@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha  --reporter spec --compilers .coffee:coffee-script/register tests/*.coffee",
-    "start": "msgflo --graph graphs/imageresize.fbp"
+    "start": "msgflo --forward stdout,stderr --graph graphs/imageresize.fbp"
   },
   "msgflo": {
     "namespace": "imageresize",
@@ -39,7 +39,7 @@
     "coffee-script": "^1.12.4",
     "express": "^4.15.2",
     "knex": "^0.12.9",
-    "msgflo": "^0.10.7",
+    "msgflo": "^0.10.8",
     "msgflo-nodejs": "^0.10.1",
     "pg": "^6.1.5",
     "request": "^2.81.0",
