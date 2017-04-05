@@ -1,14 +1,20 @@
 msgfloNodejs = require 'msgflo-nodejs'
 bluebird = require 'bluebird'
-debug = require('debug')('imageresize:ResizeImage')
+debug = require('debug')('imageresize:StoreResult')
 
 config = require '../config'
 jobs = require '../src/jobs'
 common = require '../src/common'
 
 storeImageResult = (data) ->
-  imageData = {} # FIXME: proper
-  return jobs.imageProcessed imageData
+  imageData =
+    id: data.payload.id
+    started_at: new Date data.started_at
+    failed_at: new Date data.completed_at
+    completed_at: new Date data.completed_at
+    result: data.result
+    error: data.error
+  return jobs.imageProcessed data.job, imageData
 
 StoreResult = (client, role) ->
 
@@ -39,7 +45,7 @@ StoreResult = (client, role) ->
         console.error 'store error', indata.id, err
         return callback 'error', err, out if err
 
-      debug 'stored', indata.id, indata
+      debug 'stored', indata.id, r
       return callback 'out', null, out
 
   p = new msgfloNodejs.participant.Participant client, definition, processFunc, role

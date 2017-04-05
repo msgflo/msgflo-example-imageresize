@@ -5,6 +5,19 @@ msgflo = require 'msgflo'
 
 config = require '../config'
 
+# Based on http://stackoverflow.com/a/38225011/1967571
+rejectDelayer = (delay) ->
+  f = (reason) ->
+    return new Promise (resolve, reject) ->
+      setTimeout(reject.bind(null, reason), delay)
+  return f
+
+retryUntil = (attempt, test, delay=500, max=5) ->
+  p = Promise.reject(new Error 'retry starter')
+  for i in [0..max]
+    p = p.catch(attempt).then(test).catch(rejectDelayer(delay))
+  return p
+
 resizeImages = (endpoint, urls, height, width) ->
   request =
     images: []
@@ -69,8 +82,35 @@ successTest = (endpoint, name, urls) ->
         chai.expect(Object.keys(images)).to.have.length urls.length
 
     describe 'after a little time', ->
-      it 'the job is completed'
+      completedResponse = null
 
+      before ->
+        @timeout 12*1000
+
+        jobStatus = () ->
+          url = endpoint.replace('/resize', response.headers['location'])
+          r =
+            uri: url
+            json: true
+            simple: false
+            resolveWithFullResponse: true
+          requestPromise.get r
+          .then (res) ->
+            return res
+
+        isCompleted = (response) ->
+          #console.log 'b', JSON.stringify(response.body, null, 2)
+          if response.statusCode == 200
+            return Promise.resolve response
+          else
+            return Promise.reject new Error "Job status was #{response.statusCode}"
+
+        retryUntil(jobStatus, isCompleted, 1000, 15)
+        .then (res) ->
+          completedResponse = res
+
+      it.skip 'the job is completed', ->
+        console.log 'done', completedResponse.body
 
 setupParticipants = (options) ->
   return bluebird.promisify(msgflo.setup.participants)(options)
@@ -98,5 +138,5 @@ describe 'Resizing images via HTTP API', ->
     return Promise.resolve null if not processes
     return killProcesses processes
 
-  urls = require './fixtures/images-music-jonnor-com.json'
+  urls = require './fixtures/images-few.json'
   successTest endpoint, 'music.jonnor.com', urls

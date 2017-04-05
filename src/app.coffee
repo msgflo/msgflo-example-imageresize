@@ -16,9 +16,9 @@ routes.getJob = (req, res, next) ->
   jobId = req.params.id
   debug "GET /job/:#{jobId}"
   jobs.get jobId
-  .then (jobData) ->
-    code = 201 # TODO: indicate completeness
-    return res.status(code).json jobData
+  .then (job) ->
+    code = if jobs.isCompleted(job.data) then 200 else 201
+    return res.status(code).json job
   .catch (err) ->
     return next err
 
