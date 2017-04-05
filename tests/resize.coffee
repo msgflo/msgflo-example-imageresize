@@ -1,8 +1,9 @@
 requestPromise = require 'request-promise'
 bluebird = require 'bluebird'
 chai = require 'chai'
+msgflo = require 'msgflo'
 
-app = require '../src/app'
+config = require '../config'
 
 resizeImages = (endpoint, urls, height, width) ->
   request =
@@ -70,19 +71,32 @@ successTest = (endpoint, name, urls) ->
     describe 'after a little time', ->
       it 'the job is completed'
 
-describe 'Resizing images via HTTP API', ->
 
-  port = 5555
+setupParticipants = (options) ->
+  return bluebird.promisify(msgflo.setup.participants)(options)
+killProcesses = (parts, signal) ->
+  return bluebird.promisify(msgflo.setup.killProcesses)(parts, signal)
+
+describe 'Resizing images via HTTP API', ->
+  port = 6666
   endpoint = "http://localhost:#{port}/resize"
-  server = null
+  processes = null
+
+  # TODO: support specifying envvars like PORT
+  setup =
+    graphfile: './graphs/imageresize.fbp'
+    forward: 'stderr,stdout'
+    broker: config.msgflo.broker
 
   before ->
-    app.startServer port
-    .then (instance) ->
-      server = instance.server
-
+    @timeout 10*1000
+    return setupParticipants setup
+    .then (p) ->
+      processes = p
   after ->
-    server.close()
+    @timeout 4*1000
+    return Promise.resolve null if not processes
+    return killProcesses processes
 
   urls = require './fixtures/images-music-jonnor-com.json'
   successTest endpoint, 'music.jonnor.com', urls
