@@ -16,11 +16,14 @@ Ref. https://benramsey.com/blog/2008/04/http-status-201-created-vs-202-accepted/
 
 Minimal
 
-* Worker can download/rescale
-* Worker can upload to a blob store
-* Database keeps job status, allows querying
+* Add test for successful job completion
+* Deploy to Heroku, test live
+* Test with GuvScale
 
 Bonus
 
-* UI: Accept URLs
+* Make tests support running against remote app
+* Script for querying processing times
 * Heroku Button support
+* UI: Accept URLs
+
