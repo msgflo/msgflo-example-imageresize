@@ -42,10 +42,10 @@ StoreResult = (client, role) ->
     .asCallback (err, r) ->
       out.stored_at = new Date()
       if err
-        console.error 'store error', indata.id, err
+        console.error 'store error', indata.payload?.id, err
         return callback 'error', err, out if err
 
-      debug 'stored', indata.id, r.result?.output, r.error?.message
+      debug 'stored', indata.payload.id, r.result?.output, r.error?.message
       return callback 'out', null, out
 
   p = new msgfloNodejs.participant.Participant client, definition, processFunc, role
