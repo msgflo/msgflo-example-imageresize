@@ -39,6 +39,7 @@
     "coffee-script": "^1.12.4",
     "express": "^4.15.2",
     "knex": "^0.12.9",
+    "knox": "^0.9.2",
     "msgflo": "^0.10.8",
     "msgflo-nodejs": "^0.10.1",
     "pg": "^6.1.5",

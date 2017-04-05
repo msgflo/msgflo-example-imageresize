@@ -1,15 +1,19 @@
 # Actual resizing functionality
 
 sharp = require 'sharp'
+knox = require 'knox'
 request = require 'request'
 fs = require 'fs'
 uuid = require 'uuid'
 bluebird = require 'bluebird'
+path = require 'path'
 
 common = require './common'
+config = require '../config'
 
 # Returns a Stream transformer which resizes image input data
 # and outputs a new image within the specified @height / @width
+# http://sharp.dimens.io/en/stable/api-resize/#resize
 exports.createResizer = (width, height, options = {}) ->
   throw new Error "Height not specified" if not height?
   throw new Error "Width not specified" if not width?
@@ -31,26 +35,33 @@ exports.createResizer = (width, height, options = {}) ->
   transformer.max()
   return transformer
 
+uploadS3 = (buffer, path, headers={}) ->
+  client = knox.createClient config.s3
+  bluebird.promisify(client.putBuffer, context: client)(buffer, path, headers)
+
 exports.resizeImageAndUpload = (image) ->
   bluebird.resolve()
   .then () ->
     throw new Error "Missing .input URL" if not image?.input
+    throw new Error "Missing .id for image" if not image?.id
 
     reader = request image.input
     options =
-      format: image.format
+      format: image.format or 'jpeg'
       policy: image.policy
     resizer = exports.createResizer image.width, image.height, options
-    writer = fs.createWriteStream "#{image.id}.jpg" # FIXME: actually upload somewhere
+    outputPath = path.join config.s3.prefix, "#{image.id}.#{options.format}"
     reader.pipe(resizer)
-    resizer.pipe(writer)
-
-    return common.streamEnd writer
+    resizer.toBuffer()
+    .then (buffer) ->
+      return uploadS3 buffer, outputPath
+    .then () ->
+      return "https://#{config.s3.bucket}.s3.amazonaws.com/#{outputPath}"
 
 main = () ->
-  [node, script, input, output, width, height] = process.argv
-  if not (input and output and height and width)
-    console.error 'Usage: imageresizer-resize-file http://example.net/URL.jpg OUTPUT.jpg height width'
+  [node, script, input, width, height] = process.argv
+  if not (input and height and width)
+    console.error 'Usage: imageresizer-resize-file http://example.net/URL.jpg height width'
     process.exit 1
   
   image =
@@ -60,7 +71,7 @@ main = () ->
     input: input
 
   exports.resizeImageAndUpload image
-  .asCallback (err, r) ->
+  .asCallback (err, output) ->
     if err
       console.error err
       process.exit 2
