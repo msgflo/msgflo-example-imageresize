@@ -70,7 +70,7 @@ routes.resizeImages = (req, res, next) ->
 
 setupApp = (app) ->
   app.participants =
-    web: WebParticipant config.msgflo.broker, 'api'
+    web: WebParticipant config.msgflo.broker, 'web'
 
   app.use bodyParser.json
     limit: '1mb'
