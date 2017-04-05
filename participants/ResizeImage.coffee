@@ -4,6 +4,7 @@ debug = require('debug')('imageresize:ResizeImage')
 
 config = require '../config'
 resize = require '../src/resize'
+common = require '../src/common'
 
 ResizeImage = (client, role) ->
 
@@ -24,14 +25,14 @@ ResizeImage = (client, role) ->
     ]
 
   processFunc = (inport, indata, callback) ->
-    out = exports.clone indata
+    out = common.clone indata
     out.started_at = new Date()
 
-    resize.resizeImageAndUpload(indata)
+    resize.resizeImageAndUpload(indata.payload)
     .timeout config.resize.timeout, 'Resizing timed out'
     .asCallback (err, resizedUrl) ->
       if err
-        console.error 'resize error', indata.id, err
+        console.error 'resize error', indata.payload?.id, err
         out.error = common.serializeError err
         out.failed_at = new Date()
         return callback 'error', err, out if err

@@ -23,5 +23,6 @@ exports.get = (jobId) ->
 exports.isCompleted = (job) ->
 
 exports.imageProcessed = (jobId, result) ->
-
+  # FIXME: implement
+  return bluebird.resolve()
 

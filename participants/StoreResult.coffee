@@ -4,10 +4,11 @@ debug = require('debug')('imageresize:ResizeImage')
 
 config = require '../config'
 jobs = require '../src/jobs'
+common = require '../src/common'
 
 storeImageResult = (data) ->
   imageData = {} # FIXME: proper
-  jobs.imageProcessed imageData
+  return jobs.imageProcessed imageData
 
 StoreResult = (client, role) ->
 
@@ -28,7 +29,7 @@ StoreResult = (client, role) ->
     ]
 
   processFunc = (inport, indata, callback) ->
-    out = exports.clone indata
+    out = common.clone indata
 
     storeImageResult(indata)
     .timeout config.store.timeout, 'store timed out'
