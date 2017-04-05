@@ -16,14 +16,13 @@ Ref. https://benramsey.com/blog/2008/04/http-status-201-created-vs-202-accepted/
 
 Minimal
 
-* Add test for successful job completion
-* Deploy to Heroku, test live
+* Add checks for successful job completion test
 * Test with GuvScale
 
 Bonus
 
-* Make tests support running against remote app
 * Script for querying processing times
+* Fix marking job status with completed
 * Heroku Button support
 * UI: Accept URLs
 
