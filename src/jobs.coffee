@@ -51,6 +51,7 @@ exports.imageProcessed = (jobId, data) ->
     db.transaction (trx) ->
       db('jobs').transacting(trx)
       .select 'data'
+      .forUpdate()
       .where 'id', jobId
       .then (rows) ->
         throw new Error "Returned #{rows.length} rows for job #{jobId}" if rows.length > 1
