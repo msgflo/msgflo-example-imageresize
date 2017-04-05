@@ -45,6 +45,8 @@ routes.resizeImages = (req, res, next) ->
   # so they can be processed independently by the worker
   images = req.body.images.map (i) ->
     i.id = uuid.v4()
+    return i
+    
   messages = images.map (i) ->
     m =
       job: jobId
@@ -60,10 +62,15 @@ routes.resizeImages = (req, res, next) ->
 
   # Store images with ID on as part of job,
   # so we can correlate with id from worker
+  imageMap = {} 
+  images.map (i) ->
+    imageMap[i.id] = i    
+
   job =
     id: jobId
-    images: images
-  # FIXME: persist job info to database
+    data:
+      images: imageMap
+    created_at: new Date()
 
   return res.location("/job/#{jobId}").status(202).end()
 

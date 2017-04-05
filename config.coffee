@@ -8,3 +8,5 @@ module.exports =
   resize:
     timeout: parseInt envvar('IMAGERESIZE_TIMEOUT', 10) # seconds before aborting
     concurrent: parseInt envvar('IMAGERESIZE_CONCURRENT', 5) # number of concurrent jobs
+  database:
+    url: envvar('DATABASE_URL', 'postgres://postgres:@localhost/imageresize_test')

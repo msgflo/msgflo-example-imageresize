@@ -13,3 +13,4 @@ env:
   - DATABASE_URL=postgres://postgres:@localhost/imageresize_test
 before_script:
 - psql -c 'create database imageresize_test;' -U postgres
+- ./node_modules/.bin/knex migrate:latest
