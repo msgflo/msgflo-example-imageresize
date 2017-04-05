@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha  --reporter spec --compilers .coffee:coffee-script/register tests/*.coffee",
-    "start": "msgflo --forward stdout,stderr --graph graphs/imageresize.fbp"
+    "start": "msgflo --forward stdout,stderr --graph graphs/imageresize.fbp",
+    "postinstall": "./node_modules/.bin/msgflo-procfile graphs/imageresize.fbp > Procfile"
   },
   "msgflo": {
     "namespace": "imageresize",
