@@ -34,6 +34,28 @@ successTest = (endpoint, name, urls) ->
 
     it 'should respond with 202 Accepted', ->
       chai.expect(response.statusCode, JSON.stringify(response.body)).to.equal 202
+    it 'should set Location header to /job/:id', ->
+      location = response.headers['location']
+      chai.expect(location).to.contain '/job/'
+
+    describe 'GET /job/:id', ->
+      jobResponse = null
+      before ->
+        url = endpoint.replace('/resize', response.headers['location'])
+        r =
+          uri: url
+          json: true
+          simple: false
+          resolveWithFullResponse: true
+        requestPromise.get r
+        .then (res) ->
+          jobResponse = res
+      it 'should return 201 Created', ->
+        chai.expect(jobResponse.statusCode, JSON.stringify(jobResponse.body)).to.equal 201
+      it 'should show job as not completed'
+
+    describe 'after a little time', ->
+      it 'the job is completed'
 
 describe 'Resizing images via HTTP API', ->
 

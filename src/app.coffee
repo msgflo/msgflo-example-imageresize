@@ -7,6 +7,7 @@ debug = require('debug')('msgflo-imageresize:web')
 
 config = require '../config'
 errors = require './errors'
+jobs = require './jobs'
 
 WebParticipant = (client, role) ->
   id = process.env.DYNO or uuid.v4()
@@ -31,8 +32,15 @@ WebParticipant = (client, role) ->
   return new msgfloNodejs.participant.Participant client, definition, func, role
 
 routes = {}
-routes.getJob = (req, res, next, jobId) ->
-  return next()
+routes.getJob = (req, res, next) ->
+  jobId = req.params.id
+  console.log 'GET', jobId
+  jobs.get jobId
+  .then (jobData) ->
+    code = 201 # TODO: indicate completeness
+    return res.status(code).json jobData
+  .catch (err) ->
+    return next err
 
 routes.resizeImages = (req, res, next) ->
   # TODO: verify request payload with a JSON schema
@@ -62,7 +70,7 @@ routes.resizeImages = (req, res, next) ->
 
   # Store images with ID on as part of job,
   # so we can correlate with id from worker
-  imageMap = {} 
+  imageMap = {}
   images.map (i) ->
     imageMap[i.id] = i    
 
@@ -72,7 +80,11 @@ routes.resizeImages = (req, res, next) ->
       images: imageMap
     created_at: new Date()
 
-  return res.location("/job/#{jobId}").status(202).end()
+  jobs.create job
+  .then () ->
+    return res.location("/job/#{jobId}").status(202).end()
+  .catch (err) ->
+    return next err
 
 setupApp = (app) ->
   app.participants =
@@ -86,8 +98,8 @@ setupApp = (app) ->
     return next()
 
   # API routes
-  app.post '/resize/', routes.resizeImages
   app.get '/job/:id', routes.getJob
+  app.post '/resize/', routes.resizeImages
 
   # 404 handler
   app.use (req, res, next) ->
