@@ -14,3 +14,4 @@ env:
 before_script:
 - psql -c 'create database imageresize_test;' -U postgres
 - ./node_modules/.bin/knex migrate:latest
+- npm run setup

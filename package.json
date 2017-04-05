@@ -9,7 +9,8 @@
   "scripts": {
     "test": "mocha  --reporter spec --compilers .coffee:coffee-script/register tests/*.coffee",
     "start": "msgflo --forward stdout,stderr --graph graphs/imageresize.fbp",
-    "postinstall": "./node_modules/.bin/msgflo-procfile graphs/imageresize.fbp > Procfile"
+    "postinstall": "msgflo-procfile graphs/imageresize.fbp > Procfile",
+    "setup": "msgflo-setup --participants=true graphs/imageresize.fbp"
   },
   "msgflo": {
     "namespace": "imageresize",
