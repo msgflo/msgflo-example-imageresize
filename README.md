@@ -24,5 +24,16 @@ Bonus
 * Script for querying processing times
 * Fix marking job status with completed
 * Heroku Button support
+* Allow hosting `store` inside `web` worker
+* Tools for summarizing/visualizing performance
 * UI: Accept URLs
+
+## Docs
+
+Run performance tests of different architectures.
+
+* Syncronous HTTP request-response
+* Everything-in-web-role
+* Dedicated worker
+* Dedicated worker with autoscaling
 
