@@ -3,6 +3,8 @@
 
 Example of how to build a backend service for CPU-intensive tasks using [Msgflo](https://msgflo/org).
 
+![Architecture of the system](./doc/service-graph.png)
+
 ## API
 
 * API. HTTP POST. JSON body. Array of images. URL and desired height/width. Returns 202 Accepted, with `Location`.
