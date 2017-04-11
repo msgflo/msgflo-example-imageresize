@@ -31,13 +31,14 @@ calculateStats = (job) ->
   lastCompleted = imagesCompleted[imagesCompleted.length-1]
   jobEnd = endedAt lastCompleted
   jobTime = jobEnd.getTime() - (new Date job.created_at).getTime()
-  console.log 'job', jobTime
+  job.total = jobTime
 
   for id, image of job.data.images
     image.created_at = job.created_at # FIXME: set image created_at API-side
-    console.log 'image', id, waitingTime(image), processingTime(image)
+    image.waiting = waitingTime image
+    image.processing = processingTime image
 
-  return null
+  return job
 
 main = () ->
   [node, script, jobUrl] = process.argv
@@ -47,6 +48,6 @@ main = () ->
   requestPromise { url: jobUrl, json: true }
   .then calculateStats
   .then (stats) ->
-    console.log stats
+    console.log JSON.stringify stats, null, 2
 
 main() if not module.parent
