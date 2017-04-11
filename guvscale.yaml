@@ -5,10 +5,3 @@ resize:
   maximum: 3          # Maximum number of workers
   concurrency: 10     # How many messages are processed concurrently
   processing: 0.800   # 800 ms, in seconds
-store:
-  queue: "store.IN"
-  deadline: 180
-  minimum: 0
-  maximum: 1
-  concurrency: 10
-  processing: 0.100
