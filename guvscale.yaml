@@ -1,4 +1,4 @@
-emailsender:
+resize:
   queue: "resize.IN" # The AMQP queue name
   deadline: 180       # 3 minutes, in seconds
   minimum: 0          # Minimum number of workers
