@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "Image resizing service built with MsgFlo",
   "main": "index.js",
-  "engines" : {
-    "node" : ">=7.x"
+  "engines": {
+    "node": ">=7.x"
   },
   "scripts": {
     "test": "mocha  --reporter spec --compilers .coffee:coffee-script/register tests/*.coffee",
@@ -54,6 +54,7 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
+    "arrivals": "^2.1.0",
     "chai": "^3.5.0",
     "mocha": "^3.2.0"
   }
