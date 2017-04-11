@@ -10,8 +10,8 @@ storeImageResult = (data) ->
   imageData =
     id: data.payload.id
     started_at: new Date data.started_at
-    failed_at: new Date data.failed_at
-    completed_at: new Date data.completed_at
+    failed_at: new Date data.failed_at if data.failed_at
+    completed_at: new Date data.completed_at if data.completed_at
     result: data.result
     error: data.error
   return jobs.imageProcessed data.job, imageData
