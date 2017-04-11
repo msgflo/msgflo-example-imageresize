@@ -24,7 +24,7 @@ main = () ->
   jobs = []
 
   # parameters
-  urls = urls = require './tests/fixtures/images-few.json'
+  urls = urls = require '../tests/fixtures/images-few.json'
   port = 6666
   baseurl = process.env.IMAGERESIZE_TEST_TARGET or "http://localhost:#{port}" 
   end = undefined # forever, until p.stop()
@@ -38,6 +38,7 @@ main = () ->
     .then (response) ->
       jobUrl = response.headers['location']
       responded = new Date()
+      console.log 'j', jobUrl
       jobs.push
         requested_at: requested
         responded_at: responded
