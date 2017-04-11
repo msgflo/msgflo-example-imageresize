@@ -10,6 +10,7 @@ errors = require './errors'
 jobs = require './jobs'
 
 WebParticipant = require '../participants/Web'
+StoreParticipant = require '../participants/StoreResult'
 
 routes = {}
 routes.getJob = (req, res, next) ->
@@ -71,6 +72,7 @@ routes.resizeImages = (req, res, next) ->
 setupApp = (app) ->
   app.participants =
     web: WebParticipant config.msgflo.broker, 'web'
+    store: StoreParticipant config.msgflo.broker, 'store'
 
   app.use bodyParser.json
     limit: '1mb'
@@ -123,6 +125,7 @@ exports.startServer = (port) ->
     return bluebird.all([
       startWeb app, port
       startParticipant app.participants.web
+      startParticipant app.participants.store
     ]).then (array) ->
       return Promise.resolve app
 

@@ -8,9 +8,9 @@
   },
   "scripts": {
     "test": "mocha  --reporter spec --compilers .coffee:coffee-script/register tests/*.coffee",
-    "start": "msgflo --forward stdout,stderr --graph graphs/imageresize.fbp",
-    "postinstall": "msgflo-procfile graphs/imageresize.fbp > Procfile",
-    "setup": "msgflo-setup --participants=true graphs/imageresize.fbp"
+    "start": "msgflo --ignore store --graph graphs/imageresize.fbp",
+    "postinstall": "msgflo-procfile --ignore store graphs/imageresize.fbp > Procfile",
+    "setup": "msgflo-setup --participants=true --ignore store graphs/imageresize.fbp"
   },
   "msgflo": {
     "namespace": "imageresize",
