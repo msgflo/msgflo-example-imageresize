@@ -10,6 +10,7 @@
     "test": "mocha  --reporter spec --compilers .coffee:coffee-script/register tests/*.coffee",
     "start": "msgflo --ignore store --graph graphs/imageresize.fbp",
     "postinstall": "msgflo-procfile --ignore store graphs/imageresize.fbp > Procfile",
+    "build": "webpack --config webpack.config.js",
     "setup": "msgflo-setup --participants=true --ignore store graphs/imageresize.fbp"
   },
   "msgflo": {
@@ -56,6 +57,8 @@
   "devDependencies": {
     "arrivals": "^2.1.0",
     "chai": "^3.5.0",
-    "mocha": "^3.2.0"
+    "coffee-loader": "^0.7.3",
+    "mocha": "^3.2.0",
+    "webpack": "^2.3.3"
   }
 }
