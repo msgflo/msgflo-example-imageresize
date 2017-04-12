@@ -2,7 +2,7 @@ arrivals = require 'arrivals'
 requestPromise = require 'request-promise'
 bluebird = require 'bluebird'
 
-resizeImages = (endpoint, urls, height, width) ->
+exports.resizeImages = (endpoint, urls, height, width) ->
   request =
     images: []
   for u in urls
@@ -34,7 +34,7 @@ main = () ->
 
   p.on 'arrival', () ->
     requested = new Date()
-    resizeImages "#{baseurl}/resize", urls, 300, 300
+    exports.resizeImages "#{baseurl}/resize", urls, 300, 300
     .then (response) ->
       jobUrl = response.headers['location']
       responded = new Date()
@@ -49,4 +49,3 @@ main = () ->
    
   p.start()
 
-main() if not module.parent

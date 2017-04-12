@@ -4,6 +4,7 @@ bodyParser = require 'body-parser'
 uuid = require 'uuid'
 msgfloNodejs = require 'msgflo-nodejs'
 debug = require('debug')('imageresize:web')
+path = require 'path'
 
 config = require '../config'
 errors = require './errors'
@@ -13,6 +14,7 @@ WebParticipant = require '../participants/Web'
 StoreParticipant = require '../participants/StoreResult'
 
 routes = {}
+
 routes.getJob = (req, res, next) ->
   jobId = req.params.id
   debug "GET /job/:#{jobId}"
@@ -84,6 +86,14 @@ setupApp = (app) ->
   # API routes
   app.get '/job/:id', routes.getJob
   app.post '/resize/', routes.resizeImages
+
+  # Demo ui routes
+  app.get '/', (req, res, next) ->
+    res.sendFile path.join(__dirname, '../assets', 'index.html')
+  app.get '/assets/main.css', (req, res, next) ->
+    res.sendFile path.join(__dirname, '../assets', 'main.css')
+  app.get '/assets/imageresize.js', (req, res, next) ->
+    res.sendFile path.join(__dirname, '../assets', 'imageresize.js')
 
   # 404 handler
   app.use (req, res, next) ->

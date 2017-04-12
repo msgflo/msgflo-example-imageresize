@@ -1,0 +1,12 @@
+
+/* Reset */
+* {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  position: relative;
+}
+
+body {
+    font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+}

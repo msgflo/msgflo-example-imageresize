@@ -1,3 +1,4 @@
 node_modules/
 .env
 Procfile
+assets/imageresize.js

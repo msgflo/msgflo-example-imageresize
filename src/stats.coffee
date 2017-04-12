@@ -23,7 +23,7 @@ sortEndtime = (a, b) ->
   [A, B] = [endedAt(a), endedAt(b)]
   return A.getTime() - B.getTime()
 
-calculateStats = (job) ->
+exports.calculateStats = (job) ->
 
   # FIXME: set job failed/completed_at on API-side
   # TODO: also set job started_at
@@ -46,8 +46,7 @@ main = () ->
     console.error "Usage: stats JOBURL"
 
   requestPromise { url: jobUrl, json: true }
-  .then calculateStats
+  .then exports.calculateStats
   .then (stats) ->
     console.log JSON.stringify stats, null, 2
 
-main() if not module.parent
