@@ -12,7 +12,9 @@
     "procfile": "msgflo-procfile --ignore store graphs/imageresize.fbp > Procfile",
     "postinstall": "npm run procfile && npm run build",
     "build": "webpack --config webpack.config.js",
-    "setup": "msgflo-setup --participants=true --ignore store graphs/imageresize.fbp"
+    "knex": "knex migrate:latest",
+    "bind": "msgflo-setup --participants=true --ignore store graphs/imageresize.fbp",
+    "setup": "npm run knex && npm run bind"
   },
   "msgflo": {
     "namespace": "imageresize",
