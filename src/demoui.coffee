@@ -7,6 +7,7 @@ arrivals = require 'arrivals'
 
 common = require './common'
 load = require './load'
+stats = require './stats'
 
 initialState =
   config:
@@ -77,7 +78,7 @@ exports.run = () ->
       job.localId = localJobId
       job.responded_at = new Date()
       if response.statusCode == 202
-        job.url = response.headers['location']
+        job.url = currentState.config.baseurl+response.headers['location']
       else
         job.error =
           code: response.statusCode
@@ -99,10 +100,16 @@ exports.run = () ->
       return created and not completed
 
     bluebird.map jobs, (job) ->
-      requestPromise { url: job, json: true }
+      requestPromise { uri: job.url, json: true }
       .then stats.calculateStats
       .then (data) ->
-        currentState.jobs[job.localId].body = data
+        data.localId = job.localId
+        return data
+    .then (jobsData) ->
+      # do change update and notification once for whole set
+      for data in jobsData
+        currentState.jobs[data.localId].body = data
+      onChange()
 
   setTimeout updateJobStatus, currentState.config.updateRate*1000
   changeInputProcess currentState, currentState, onArrival
