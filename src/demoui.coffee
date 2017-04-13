@@ -85,7 +85,7 @@ renderJob = (job, deadlineMs) ->
     msg = "#{images.failed.length}/#{images.all.length} failed"
     state = 'errored'
   if job.error
-    msg = "job request failed: #{job.error}" if job.error
+    msg = "job request failed #{job.error.code}: #{job.error.message}" if job.error
     state = 'errored'
   if job.completed_at
     msg = "#{image.completed.length}/#{images.all.length} completed"
@@ -143,6 +143,7 @@ exports.run = () ->
         job.error =
           code: response.statusCode
           body: response.body
+          message: response.body.message
       onChange()
 
   subscribeInputs (newInputs) ->
