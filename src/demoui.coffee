@@ -12,7 +12,7 @@ stats = require './stats'
 initialState =
   config:
     baseurl: window.location.origin
-    updateRate: 10 # seconds
+    updateRate: 5 # seconds
   inputs:
     jobrate: 0 # per minute
     imagesPerJob: 10
@@ -130,5 +130,5 @@ exports.run = () ->
         currentState.jobs[data.localId].body = data
       onChange()
 
-  setTimeout updateJobStatus, currentState.config.updateRate*1000
+  setInterval updateJobStatus, currentState.config.updateRate*1000
   changeInputProcess currentState, currentState, onArrival
