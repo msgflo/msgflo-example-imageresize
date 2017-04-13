@@ -12,7 +12,7 @@ stats = require './stats'
 initialState =
   config:
     baseurl: window.location.origin
-    updateRate: 5 # seconds
+    updateRate: 3 # seconds
     deadline: 30 # seconds
   inputs:
     jobrate: 0 # per minute
