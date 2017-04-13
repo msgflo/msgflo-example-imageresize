@@ -10,3 +10,53 @@
 body {
     font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
 }
+
+/* Jobs history */
+#jobs {
+  width: 100%;
+  overflow-y: scroll;
+}
+#jobs li {
+  height: 20px;
+  font-size: 12px;
+  border: 1px;
+  border-style: solid;
+  border-color: white;
+}
+#jobs h4 {
+  display: inline;
+  width: 80px;
+  float: left;
+}
+#jobs meter {
+  width: 420px;
+  float: left;
+  height: 100%;
+}
+#jobs meter::-webkit-meter-optimum-value {
+  background: none;
+  opacity: 70%;
+}
+#jobs .errored meter::-webkit-meter-optimum-value {
+  background-color: red;
+}
+#jobs .pending meter::-webkit-meter-optimum-value {
+  background-color: yellow;
+}
+#jobs .completed meter::-webkit-meter-optimum-value {
+  background-color: green;
+}
+
+#jobs p {
+  left: -420px;
+  float: left;
+  width: 400px;
+}
+#jobs output {
+  left: -420px;
+  display: block;
+  text-align: right;
+  width: 100px;
+  bottom: -3px;
+}
+
