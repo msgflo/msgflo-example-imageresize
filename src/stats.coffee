@@ -33,6 +33,14 @@ exports.calculateStats = (job) ->
   jobTime = jobEnd.getTime() - (new Date job.created_at).getTime()
   job.total = jobTime
 
+  allCompleted = imagesCompleted.every (i) -> i.completed_at
+  anyFailed = imagesCompleted.some (i) -> i.failed_at
+
+  if allCompleted
+    job.completed_at = jobEnd
+  if anyFailed
+    job.failed_at = jobEnd
+
   for id, image of job.data.images
     image.created_at = job.created_at # FIXME: set image created_at API-side
     image.waiting = waitingTime image
