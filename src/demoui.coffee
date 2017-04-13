@@ -49,8 +49,27 @@ subscribeInputs = (callback) ->
     form = e.currentTarget
     callback { jobrate: parseFloat(form.elements.rate.value) }
 
+renderJob = (job) ->
+  top = document.createElement 'li'
+  id = job.localId.substring 0,5
+  state = "pending"
+  end = new Date()
+  end = new Date job.body?.completed_at if job.body?.completed_at
+  timeMs = end.getTime() - job.requested_at.getTime()
+  top.innerHTML = "#{id}: #{state} #{timeMs} ms"
+  return top
+
 renderJobs = (state) ->
-  console.log 'j', state.jobs
+  sorted = common.objectValues(state.jobs).sort (a, b) ->
+    A = a.requested_at.getTime()
+    B = b.requested_at.getTime()
+    return B - A # latest first
+  container = elem('jobs')
+  container.innerHTML = ''
+  console.log 'j', sorted
+  for job in sorted
+    e = renderJob(job)
+    container.appendChild e
 
 resizeImages = (state) ->
   i = state.inputs
@@ -65,6 +84,7 @@ exports.run = () ->
     # request job creation
     localJobId = uuid.v4() # HACK, since API does not allow us to specify
     currentState.jobs[localJobId] =
+      localId: localJobId
       requested_at: new Date()
       responded_at: null
       url: null
@@ -75,7 +95,6 @@ exports.run = () ->
     .then (response) ->
       # job was created
       job = currentState.jobs[localJobId]
-      job.localId = localJobId
       job.responded_at = new Date()
       if response.statusCode == 202
         job.url = currentState.config.baseurl+response.headers['location']
