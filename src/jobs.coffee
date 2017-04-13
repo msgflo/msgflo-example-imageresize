@@ -29,7 +29,6 @@ exports.isCompleted = (job) ->
   completed = all.filter imageCompleted
   notCompleted = all.filter (i) -> not imageCompleted i
   remaining = all.length-completed.length
-  console.log 'completed', remaining, notCompleted.map (i) -> i.id
   return remaining == 0
 
 exports.imageProcessed = (jobId, data) ->
