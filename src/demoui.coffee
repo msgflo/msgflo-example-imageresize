@@ -46,7 +46,7 @@ elem = (id) ->
 subscribeInputs = (callback) ->
   elem('jobrate').onchange = (e) ->
     form = e.currentTarget
-    callback { jobrate: form.elements.rate.value }
+    callback { jobrate: parseFloat(form.elements.rate.value) }
 
 renderJobs = (state) ->
   console.log 'j', state.jobs
@@ -86,6 +86,7 @@ exports.run = () ->
 
   subscribeInputs (newInputs) ->
     old = common.clone currentState
+    old.inputProcess = currentState.inputProcess # not clone-able
     for k,v of newInputs
       currentState.inputs[k] = v
     onChange()
