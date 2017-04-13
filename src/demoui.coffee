@@ -91,14 +91,19 @@ renderJob = (job, deadlineMs) ->
     msg = "#{images.completed.length}/#{images.all.length} completed"
     state = 'completed'
   if timeMs > deadlineMs and state != 'errored'
-    msg = "#{images.pending.length}/#{images.all.length} pending"
+    msg = "job timed out"
+    msg += "#{images.pending.length}/#{images.all.length} pending" if images.pending.length
     state = 'errored'
 
   # TODO: consider executing taking longer than a deadline for errored
   # TODO: visualize state
   # TODO: visualize execution time
   top.className = "job #{state}"
-  top.innerHTML = "#{id}: #{msg} #{timeMs} ms"
+  top.innerHTML = """
+    <h4>#{id}</h4>
+    <meter max=#{deadlineMs} value=#{timeMs}>#{msg}</meter>
+    <output>#{timeMs} ms</output>
+  """
   return top
 
 renderJobs = (state) ->
