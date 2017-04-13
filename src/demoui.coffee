@@ -73,9 +73,9 @@ renderJob = (job, deadlineMs) ->
   end = new Date job.body?.completed_at if job.body?.completed_at
   timeMs = end.getTime() - job.requested_at.getTime()
 
-  console.log 'j', id, images.all.length, images.pending.length, images.failed.length
-
-  if images.requested_at
+  msg = 'unknown'
+  state = 'pending'
+  if job.requested_at
     msg = "job request sent"
     state = 'pending'
   if images.pending.length
@@ -87,8 +87,8 @@ renderJob = (job, deadlineMs) ->
   if job.error
     msg = "job request failed #{job.error.code}: #{job.error.message}" if job.error
     state = 'errored'
-  if job.completed_at
-    msg = "#{image.completed.length}/#{images.all.length} completed"
+  if job.body?.completed_at
+    msg = "#{images.completed.length}/#{images.all.length} completed"
     state = 'completed'
   if timeMs > deadlineMs and state != 'errored'
     msg = "#{images.pending.length}/#{images.all.length} pending"
