@@ -92,7 +92,7 @@ renderJob = (job, deadlineMs) ->
     state = 'completed'
   if timeMs > deadlineMs and state != 'errored'
     msg = "job timed out"
-    msg += "#{images.pending.length}/#{images.all.length} pending" if images.pending.length
+    msg += " #{images.pending.length}/#{images.all.length} pending" if images.pending.length
     state = 'errored'
 
   # TODO: consider executing taking longer than a deadline for errored
@@ -101,7 +101,8 @@ renderJob = (job, deadlineMs) ->
   top.className = "job #{state}"
   top.innerHTML = """
     <h4>#{id}</h4>
-    <meter max=#{deadlineMs} value=#{timeMs}>#{msg}</meter>
+    <meter max=#{deadlineMs} value=#{timeMs}></meter>
+    <p>#{msg}</p>
     <output>#{timeMs} ms</output>
   """
   return top
@@ -177,5 +178,5 @@ exports.run = () ->
         currentState.jobs[data.localId].body = data
       onChange()
 
-  setInterval updateJobStatus, currentState.config.updateRate*1000
+  window.updateInterval = setInterval updateJobStatus, currentState.config.updateRate*1000
   changeInputProcess currentState, currentState, onArrival
