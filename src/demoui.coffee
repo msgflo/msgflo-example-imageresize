@@ -13,6 +13,7 @@ initialState =
   config:
     baseurl: window.location.origin
     updateRate: 5 # seconds
+    deadline: 30 # seconds
   inputs:
     jobrate: 0 # per minute
     imagesPerJob: 10
@@ -49,14 +50,55 @@ subscribeInputs = (callback) ->
     form = e.currentTarget
     callback { jobrate: parseFloat(form.elements.rate.value) }
 
-renderJob = (job) ->
+imageStats = (job) ->
+  images = job.body?.data?.images
+  ret =
+    all: []
+    completed: []
+    pending: []
+    failed: []
+  if images
+    ret.all = common.objectValues images
+    ret.failed = ret.all.filter (i) -> return i.failed_at?
+    ret.completed = ret.all.filter (i) -> return i.completed_at?
+    ret.pending = ret.all.filter (i) -> return not i.failed_at? and not i.completed_at? 
+  return ret
+
+renderJob = (job, deadlineMs) ->
   top = document.createElement 'li'
   id = job.localId.substring 0,5
-  state = "pending"
+  images = imageStats job
+
   end = new Date()
   end = new Date job.body?.completed_at if job.body?.completed_at
   timeMs = end.getTime() - job.requested_at.getTime()
-  top.innerHTML = "#{id}: #{state} #{timeMs} ms"
+
+  console.log 'j', id, images.all.length, images.pending.length, images.failed.length
+
+  if images.requested_at
+    msg = "job request sent"
+    state = 'pending'
+  if images.pending.length
+    msg = "#{images.pending.length}/#{images.all.length} pending"
+    state = 'pending'
+  if images.failed.length
+    msg = "#{images.failed.length}/#{images.all.length} failed"
+    state = 'errored'
+  if job.error
+    msg = "job request failed: #{job.error}" if job.error
+    state = 'errored'
+  if job.completed_at
+    msg = "#{image.completed.length}/#{images.all.length} completed"
+    state = 'completed'
+  if timeMs > deadlineMs and state != 'errored'
+    msg = "#{images.pending.length}/#{images.all.length} pending"
+    state = 'errored'
+
+  # TODO: consider executing taking longer than a deadline for errored
+  # TODO: visualize state
+  # TODO: visualize execution time
+  top.className = "job #{state}"
+  top.innerHTML = "#{id}: #{msg} #{timeMs} ms"
   return top
 
 renderJobs = (state) ->
@@ -66,9 +108,8 @@ renderJobs = (state) ->
     return B - A # latest first
   container = elem('jobs')
   container.innerHTML = ''
-  console.log 'j', sorted
   for job in sorted
-    e = renderJob(job)
+    e = renderJob(job, state.config.deadline*1000)
     container.appendChild e
 
 resizeImages = (state) ->
