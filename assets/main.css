@@ -8,13 +8,15 @@
 }
 
 body {
-    font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+  font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+  width: 700px;
 }
 
 /* Jobs history */
 #jobs {
   width: 100%;
   overflow-y: scroll;
+  height: 500px;
 }
 #jobs li {
   height: 20px;
@@ -48,12 +50,13 @@ body {
 }
 
 #jobs p {
-  left: -420px;
+  left: 80px;
   float: left;
+  padding-left: 10px;
   width: 400px;
+  position: absolute;
 }
 #jobs output {
-  left: -420px;
   display: block;
   text-align: right;
   width: 100px;
