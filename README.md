@@ -7,25 +7,8 @@ Example of how to build a backend service for CPU-intensive tasks using [Msgflo]
 
 ## Deploying to Heroku
 
-Download git repo
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-    git clone https://github.com/msgflo/msgflo-example-imageresize.git
-    cd msgflo-example-imageresize
-
-Creating Heroku app
-
-    heroku apps:create
-    git push heroku
-
-Add neccessary addons
-
-    heroku addons:create cloudamqp:lemur
-    heroku addons:create heroku-postgresql:hobby-dev
-    heroku addons:create bucketeer:hobbyist
-
-Setup workers
-
-    heroku run npm run setup
 
 ## API
 
