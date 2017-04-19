@@ -1,0 +1,25 @@
+{
+  "name": "msgflo-example-imageresize",
+  "description": "Image resizing service using MsgFlo",
+  "repository": "https://github.com/msgflo/msgflo-example-imageresize",
+  "keywords": ["node", "image processing", "msgflo", "thumbnail", "resize", "image resize", "graphics"],
+  "scripts": {
+    "postdeploy": "npm run setup"
+  },
+  "addons": [
+    {
+      "plan": "cloudamqp:lemur"
+    },
+    {
+      "plan": "bucketeer:hobbyist"
+    },
+    {
+      "plan": "guvscale:test"
+    },
+    {
+      "plan": "heroku-postgresql:hobby-dev"
+    }
+  ],
+  "env": {
+  }
+}
