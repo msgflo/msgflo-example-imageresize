@@ -3,6 +3,7 @@ bluebird = require 'bluebird'
 knex = require 'knex'
 
 db = require '../db'
+common = require './common'
 
 exports.create = (job) ->
   return bluebird.resolve()
@@ -25,7 +26,7 @@ exports.isCompleted = (job) ->
   imageCompleted = (image) ->
     return image.failed_at or image.completed_at
 
-  all = Object.values job.images
+  all = common.objectValues job.images
   completed = all.filter imageCompleted
   notCompleted = all.filter (i) -> not imageCompleted i
   remaining = all.length-completed.length
